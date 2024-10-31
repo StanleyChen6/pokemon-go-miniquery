@@ -17,6 +17,30 @@
             <option value="masterleague">Master League</option>
             <option value="pve">PVE</option>
         </select>
+        
+        <label for="type">Select a Type</label>
+        <select name="type" id="type">
+            <option value="all">All Types</option>
+            <option value="normal">Normal</option>
+            <option value="fighting">Fighting</option>
+            <option value="flying">Flying</option>
+            <option value="poison">Poison</option>
+            <option value="ground">Ground</option>
+            <option value="rock">Rock</option>
+            <option value="bug">Bug</option>
+            <option value="ghost">Ghost</option>
+            <option value="steel">Steel</option>
+            <option value="fire">Fire</option>
+            <option value="water">Water</option>
+            <option value="grass">Grass</option>
+            <option value="electric">Electric</option>
+            <option value="psychic">Psychic</option>
+            <option value="ice">Ice</option>
+            <option value="dragon">Dragon</option>
+            <option value="dark">Dark</option>
+            <option value="fairy">Fairy</option>
+        </select>
+
         <label for="number">Number of Pokémon (1-200):</label>
         <input type="number" name="number" id="number" min="1" max="200" required>
         <button type="submit">Submit</button>
@@ -40,6 +64,27 @@
             </div>
         {% endfor %}
     </div>
+
+    <script>
+        window.onload = function() {
+            const savedType = localStorage.getItem('selectedType');
+            const savedLeague = localStorage.getItem('selectedLeague');
+            if (savedType) {
+                document.getElementById('type').value = savedType;
+            }
+            if (savedLeague) {
+                document.getElementById('league').value = savedLeague;
+            }
+        };
+
+        document.getElementById('type').addEventListener('change', function() {
+            localStorage.setItem('selectedType', this.value);
+        });
+
+        document.getElementById('league').addEventListener('change', function() {
+            localStorage.setItem('selectedLeague', this.value);
+        });
+    </script>
 
     <script>
         document.querySelectorAll('.pokemon-card-container').forEach(card => {

@@ -12,6 +12,18 @@ def get_pokemon_data(league):
     
     return df['Pokemon'].apply(lambda x: x.split()[0]).tolist()
 
+def get_pokemon_types(pokemon_name):
+    url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}/"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        types = [t['type']['name'] for t in data['types']]
+        return types
+    else:
+        print(f"Error: {response.status_code}")
+        return []
+
 def fetch_pokemon_image(pokemon_name):
 
     response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}")
@@ -52,6 +64,7 @@ def index():
     if request.method == 'POST':
         league = request.form.get('league')
         number = int(request.form.get('number', 0))
+        type_sort = request.form.get('type')
         
         if number > 0 and number <= 200:
             pokemon_names = get_pokemon_data(league)
@@ -62,18 +75,20 @@ def index():
             while len(pokemon_set) < number:
                 name = pokemon_names[i]
                 if name is not None: 
-                    if name.lower() not in pokemon_set:
-                        pokemon_set.add(name.lower())
-                        rank += 1
-                        image = fetch_pokemon_image(name)
-                        id = get_species_id(name)
-                        evolution = get_preevolution(id)
-                        if evolution is not None and evolution != "null":
-                            evolution_image = fetch_pokemon_image(evolution)
-                            evolution_id = get_species_id(evolution)
-                            pokemon_list.append((name, image, rank, id, str.capitalize(evolution), evolution_image, evolution_id, -1))
-                        else:
-                            pokemon_list.append((name, image, rank, id, "null", "null", "null", -2))
+                    types = get_pokemon_types(name)
+                    if type_sort == "all" or type_sort in types:
+                        if name.lower() not in pokemon_set:
+                            pokemon_set.add(name.lower())
+                            rank += 1
+                            image = fetch_pokemon_image(name)
+                            id = get_species_id(name)
+                            evolution = get_preevolution(id)
+                            if evolution is not None and evolution != "null":
+                                evolution_image = fetch_pokemon_image(evolution)
+                                evolution_id = get_species_id(evolution)
+                                pokemon_list.append((name, image, rank, id, str.capitalize(evolution), evolution_image, evolution_id, -1))
+                            else:
+                                pokemon_list.append((name, image, rank, id, "null", "null", "null", -2))
                 i += 1
                 # time.sleep(.5)
 

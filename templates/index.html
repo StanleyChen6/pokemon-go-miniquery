@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Selector</title>
+    <style>
+
+        .pokemon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
+        }
+        .pokemon-card {
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .evolve-card {  
+            text-align: center;
+            border: 0px solid #ccc;
+            padding: 30px;
+            border-radius: 5px;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+
+        .evolve-card img {
+            width: 75%;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Select Pokémon</h1>
+    <form method="POST">
+        <label for="league">Choose a League:</label>
+        <select name="league" id="league">
+            <option value="greatleague">Great League</option>
+            <option value="ultraleague">Ultra League</option>
+            <option value="masterleague">Master League</option>
+            <option value="pve">PVE</option>
+        </select>
+        <label for="number">Number of Pokémon (1-200):</label>
+        <input type="number" name="number" id="number" min="1" max="200" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div class="pokemon-grid">
+
+        {% for name, image, rank, id in pokemon_list %}
+            {% if rank != -1 %}
+
+                {% if  rank != -2 %}
+                <div class="pokemon-card">
+                    <h2>(Rank: {{ rank }}) <a href="https://db.pokemongohub.net/pokemon/{{ id }}" target="_blank">{{ name }}</a></h2>
+                    <img src="{{ image }}" alt="{{ name }}"/>
+                </div>
+                
+                {% else %}
+                <div class="pokemon-card">
+                    <img src="{{ url_for('static', filename='arrow.png') }}" alt="Arrow" class="arrow" />
+                    <h2> DOES NOT EVOLVE </h2>
+                </div>
+                {% endif %}
+
+            {% else %}
+
+                <div class="evolve-card">
+                    <img src="{{ url_for('static', filename='arrow.png') }}" alt="Arrow" class="arrow" />
+                    <h3><a href="https://db.pokemongohub.net/pokemon/{{ id }}" target="_blank">{{ name }}</a> </h3>
+                    <img src="{{ image }}" alt="{{ name }}"/>
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+    <div class="pokemon-grid"></div>
+    
+</body>
+</html>

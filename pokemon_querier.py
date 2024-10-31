@@ -68,7 +68,7 @@ def index():
                         image = fetch_pokemon_image(name)
                         id = get_species_id(name)
                         evolution = get_preevolution(id)
-                        if evolution is not None:
+                        if evolution is not None and evolution != "null":
                             evolution_image = fetch_pokemon_image(evolution)
                             evolution_id = get_species_id(evolution)
                             pokemon_list.append((name, image, rank, id, str.capitalize(evolution), evolution_image, evolution_id, -1))
